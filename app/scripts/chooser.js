@@ -35,7 +35,7 @@
 
 
 		var c = Math.abs(this.n);
-		this.fillColor = new paper.Color(1-c,1,1);
+		this.fillColor = 'blue';
 
 			//this.fillColor = 'green';
 
@@ -84,7 +84,15 @@
 		this.paperRender = function() {
 			var absn = Math.abs(this.n);
 			this.path.add(new paper.Point(this.pos.x, this.pos.y));
+
+			this.path.fillColor = this.fillColor;
+			this.path.fillColor.hue += this.chue;
+			this.path.fillColor.saturation =1;
+			this.path.fillColor.brightness =1;
+			this.fillColor = this.path.fillColor;
 			this.path.smooth();
+
+
 			
 			
 		}
