@@ -15,7 +15,7 @@
 			length: 1 + Math.random() * 6
 		});
 
-		this.maxLength = 200;
+		this.maxLength = 220;
 		var stepSize = 0.3;
 		// this.preNoise = [];
 		// for (var i=0;i<this.maxLength;i++) {
@@ -28,14 +28,14 @@
 		this.lastPoint = new paper.Point(this.pos.x, this.pos.y);
 		this.randRot = 10 + Math.abs(this.n) * Math.random() * 500;
 		this.randSize = 1 + Math.random() * 53;
-		this.randSpeed = 300 + Math.random() * 1000;
+		this.randSpeed = 100 + Math.random() * 1000;
 		this.chue = Math.random();
 
 		
 
 
 		var c = Math.abs(this.n);
-		this.fillColor = new paper.Color(c,c,1-c);
+		this.fillColor = new paper.Color(1-c,1,1);
 
 			//this.fillColor = 'green';
 

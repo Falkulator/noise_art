@@ -57,10 +57,11 @@ function resizeCanvas() {
 
 
 var elapsedTime = 0;
+var zoomBool = false;
              
 function draw(event) {
 	var clen = choosers.length;
-	if (elapsedTime > 1) {
+	if (elapsedTime > 0.5) {
 		console.log(paper.view.zoom);
 		var p ={
 			x: Math.random() * paper.view.bounds.width,
@@ -72,8 +73,19 @@ function draw(event) {
 		
 		elapsedTime = 0;
 	}
-	
-	paper.view.zoom -= 0.00015;
+	if (zoomBool === false) {
+		paper.view.zoom -= 0.00015;
+		if (paper.view.zoom < 0.003 ) {
+			zoomBool = true;
+		}
+		
+	} 
+	if (zoomBool === true) {
+		paper.view.zoom += 0.00009;
+		if (paper.view.zoom > 0.02) {
+			zoomBool = false;
+		}
+	}
 	for (var i=0;i<clen;i++) {
 		var chooser = choosers[i];
 		chooser.draw(event.delta, event.time);
