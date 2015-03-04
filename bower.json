@@ -1,0 +1,10 @@
+{
+  "name": "art",
+  "private": true,
+  "dependencies": {
+    "bootstrap-sass-official": "~3.3.1",
+    "modernizr": "~2.8.1",
+    "paper": "~0.9.22",
+    "requirejs": "~2.1.16"
+  }
+}
