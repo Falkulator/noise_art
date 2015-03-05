@@ -35,6 +35,8 @@ function start() {
 	}
 	
 	paper.view.onFrame = draw;
+	
+	paper.view.zoom = 0.01;
 
 	
 }
@@ -62,15 +64,20 @@ var zoomBool = false;
              
 function draw(event) {
 	var clen = choosers.length;
-	if (elapsedTime > 3) {
+	if (elapsedTime > 2) {
 		everySec();
 	}
-	zoom(event.delta);
-	for (var i=0;i<clen;i++) {
-		var chooser = choosers[i];
-		chooser.draw(event.delta, event.time);
 
+	//zoom(event.delta);
+	for (var i=0;i<clen;i++) {
+
+		var chooser = choosers[i];
+		// if (chooser.remove) {
+		// 	choosers.splice(i,1);
+		// }
+		chooser.draw(event.delta, event.time);
 	}
+
 
 	elapsedTime += event.delta;
 
@@ -95,8 +102,8 @@ function zoom(dt) {
 function everySec() {
 	console.log(paper.view.zoom);
 		var p ={
-			x: Math.random() * paper.view.bounds.width *1/ paper.view.zoom,
-			y: Math.random() * paper.view.bounds.height *1/ paper.view.zoom
+			x: Math.random() * paper.view.bounds.width ,
+			y: Math.random() * paper.view.bounds.height 
 		};
 
 		var chooser = new Chooser(p,color);
