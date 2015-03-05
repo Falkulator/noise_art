@@ -1,7 +1,8 @@
 
 var Chooser = require('./chooser.js');
 
-var choosers;
+var choosers,
+		color;
 
 window.onload = function() {
 	
@@ -21,15 +22,15 @@ window.onload = function() {
 }
 
 function start() {
-
+	color = Math.random() * 360;
 	choosers = [];
-	for (var i=0;i<1;i++) {
+	for (var i=0;i<2;i++) {
 		var p ={
 			x: Math.random() * paper.view.bounds.width,
 			y: Math.random() * paper.view.bounds.height
 		};
 
-		var chooser = new Chooser(p);
+		var chooser = new Chooser(p,color);
 		choosers.push(chooser);
 	}
 	
@@ -61,31 +62,10 @@ var zoomBool = false;
              
 function draw(event) {
 	var clen = choosers.length;
-	if (elapsedTime > 0.5) {
-		console.log(paper.view.zoom);
-		var p ={
-			x: Math.random() * paper.view.bounds.width,
-			y: Math.random() * paper.view.bounds.height
-		};
-
-		var chooser = new Chooser(p);
-		choosers.push(chooser);
-		
-		elapsedTime = 0;
+	if (elapsedTime > 3) {
+		everySec();
 	}
-	if (zoomBool === false) {
-		paper.view.zoom -= 0.00015;
-		if (paper.view.zoom < 0.003 ) {
-			zoomBool = true;
-		}
-		
-	} 
-	if (zoomBool === true) {
-		paper.view.zoom += 0.00009;
-		if (paper.view.zoom > 0.02) {
-			zoomBool = false;
-		}
-	}
+	zoom(event.delta);
 	for (var i=0;i<clen;i++) {
 		var chooser = choosers[i];
 		chooser.draw(event.delta, event.time);
@@ -94,4 +74,41 @@ function draw(event) {
 
 	elapsedTime += event.delta;
 
+}
+
+function zoom(dt) {
+	if (zoomBool === false) {
+		paper.view.zoom -= 0.0026*dt;
+		if (paper.view.zoom < 0.003 ) {
+			zoomBool = true;
+		}
+		
+	} 
+	if (zoomBool === true) {
+		paper.view.zoom += 0.0003*dt;
+		if (paper.view.zoom > 0.02) {
+			zoomBool = false;
+		}
+	}
+}
+
+function everySec() {
+	console.log(paper.view.zoom);
+		var p ={
+			x: Math.random() * paper.view.bounds.width *1/ paper.view.zoom,
+			y: Math.random() * paper.view.bounds.height *1/ paper.view.zoom
+		};
+
+		var chooser = new Chooser(p,color);
+		choosers.push(chooser);
+
+		var p ={
+			x: Math.random() * paper.view.bounds.width,
+			y: Math.random() * paper.view.bounds.height 
+		};
+
+		var chooser = new Chooser(p,color);
+		choosers.push(chooser);
+		
+		elapsedTime = 0;
 }
