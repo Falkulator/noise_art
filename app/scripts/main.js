@@ -60,26 +60,29 @@ function resizeCanvas() {
 
 
 var elapsedTime = 0;
+var totalElapsedTime = 0;
+var maxDrawTime = 45 + Math.random() * 45;
 var zoomBool = false;
              
 function draw(event) {
-	var clen = choosers.length;
-	if (elapsedTime > 2) {
+	if (elapsedTime > 2 && totalElapsedTime < maxDrawTime) {
 		everySec();
 	}
 
 	//zoom(event.delta);
-	for (var i=0;i<clen;i++) {
+	for (var i=0;i<choosers.length;i++) {
 
 		var chooser = choosers[i];
-		// if (chooser.remove) {
-		// 	choosers.splice(i,1);
-		// }
 		chooser.draw(event.delta, event.time);
+		if (chooser.remove) {
+			choosers.splice(i,1);
+		}
+
 	}
 
 
 	elapsedTime += event.delta;
+	totalElapsedTime += event.delta;
 
 }
 

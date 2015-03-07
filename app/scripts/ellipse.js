@@ -1,6 +1,6 @@
 	var noise = require('./vendor/noise.js');
 
-	var Ellipse = function(stage, point, color) {
+	var Ellipse = function(point, color) {
 
 		this.noise = new noise();
 		this.noise.seed(Math.random());
@@ -8,41 +8,24 @@
 			x:point.x,
 			y:point.y
 		}
-
 		this.n = this.noise.perlin2(this.pos.x, this.pos.y);
 
-		this.vector = {
+		this.vector = new paper.Point({
 			angle: Math.random()*360,
 			length: 1 + Math.random() * 6
-		};
+		});
 
-		this.maxLength = Math.random() *1020;
-		this.currentLength = 0;
-// 		var stepSize = 0.3;
-// 		var nx=ny=0;
-// 		this.vectors = [];
-// 		for (var i=0;i<this.maxLength;i++) {
-// 			var n =this.noise.perlin2(nx,ny);
-// 			this.vectors.push(new paper.Point({
-// 				length:Math.abs(n),
-// 				angle:function() {return this.angle+=n ||Math.random() * 360}
-// 			}));
-// 			nx+=stepSize;
-// 			ny+=stepSize;
-
-// 		}
-
-// console.log(this.vectors);
+		this.maxLength = Math.random() *200;
 
 
 		this.remove = false;
+		this.lastPoint = new paper.Point(this.pos.x, this.pos.y);
+		this.randRot = 1 + Math.abs(this.n) * Math.random() * 350;
+		this.randSize = 1 + Math.random() * 20;
+		this.randSpeed = 250 + Math.random() * 1300;
+		this.chue = 2 * Math.abs(this.n);
 
-		this.randRot = 1 + Math.abs(this.n) * Math.random() * 10;
-		this.randSize = 20 + Math.random() * 50;
-
-		this.randSpeed = 2 + Math.random() * 30;
-		this.chue = Math.abs(this.n);
-
+		this.uLength = 0;
 
 
 
@@ -52,16 +35,17 @@
 			brightness: 1
 		}
 
-		this.graphics = new PIXI.Graphics();
-		stage.addChild(this.graphics);
-		this.graphics.beginFill(color);
+			//this.fillColor = 'green';
 
-		var count = 1;
+
+		
+
+			
 			
 
-		this.draw = function() {
+		this.draw = function(dt, t) {
 			if (this.remove) {
-				this.path.remove();
+				//this.path.remove();
 				return;
 			}
 
@@ -71,44 +55,40 @@
 			this.vector.length = this.randSpeed;
 
 
+			this.pos.x += this.vector.x;
+			this.pos.y += this.vector.y;
 
-
-			this.pos.x += this.vector.length * Math.cos(this.vector.angle);
-			this.pos.y += this.vector.length * Math.sin(this.vector.angle)
-
-			this.pixiRender();
-
-			if (this.currentLength > this.maxLength) {
+			this.paperRender();
+			this.uLength += 1;
+			if (this.uLength > this.maxLength) {
 
 				this.remove = true;
 			}
-			this.currentLength += 1;
 			
 
 		}
 
 
-		this.pixiRender = function() {
+
+
+
+
+
+		this.paperRender = function() {
 			// var pos = new paper.Point(this.pos.x, this.pos.y);
 			// var size = new paper.Size(this.vector.x * this.randSize, this.vector.y * this.randSize);
 			// var rectangle = new paper.Rectangle(pos, size);
 			// var path = new paper.Path.Ellipse(rectangle);
-			// path.rotate(Math.abs(this.n) * this.randRot);
 
-			// 	path.fillColor = this.fillColor;
-			// 	path.fillColor.hue += this.chue;
-			// 	path.fillColor.saturation =1;
-			// 	path.fillColor.brightness =1;
-			// 	this.fillColor = path.fillColor;
+			var path = new paper.Shape.Ellipse({
+				point: [this.pos.x, this.pos.y],
+			   size: [this.vector.x * this.randSize, this.vector.y * this.randSize]
+			});
+			path.rotate(Math.abs(this.n) * this.randRot);
 
-			
-			//this.graphics.lineStyle(10, 0xffd900, 1);
-			var size = Math.abs(this.n) * this.randSize;
-
-			this.graphics.drawShape(new PIXI.Circle(this.pos.x, this.pos.y, size));
-			// this.graphics.rotation = count * 0.1;
-			// count += 1;
-		
+				path.fillColor = this.fillColor;
+				path.fillColor.hue += this.chue;
+				this.fillColor = path.fillColor;
 		
 		}
 
