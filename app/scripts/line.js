@@ -1,6 +1,6 @@
 	var noise = require('./vendor/noise.js');
 
-	var Line = function(point, color) {
+	var Line = function(stage, points, color) {
 
 		this.noise = new noise();
 		this.noise.seed(Math.random());
@@ -8,128 +8,100 @@
 			x:point.x,
 			y:point.y
 		}
+
 		this.n = this.noise.perlin2(this.pos.x, this.pos.y);
 
-		this.vector = new paper.Point({
-			angle: Math.random()*360,
-			length: 1 + Math.random() * 6
-		});
 
-		this.maxLength = Math.random() *1020;
 
-// 		var stepSize = 0.3;
-// 		var nx=ny=0;
-// 		this.vectors = [];
-// 		for (var i=0;i<this.maxLength;i++) {
-// 			var n =this.noise.perlin2(nx,ny);
-// 			this.vectors.push(new paper.Point({
-// 				length:Math.abs(n),
-// 				angle:function() {return this.angle+=n ||Math.random() * 360}
-// 			}));
-// 			nx+=stepSize;
-// 			ny+=stepSize;
-
-// 		}
-
-// console.log(this.vectors);
+		this.maxLength = Math.random() * 2020;
+		this.currentLength = 0;
+		
 
 
 		this.remove = false;
-		this.lastPoint = new paper.Point(this.pos.x, this.pos.y);
-		this.randRot = 1 + Math.abs(this.n) * Math.random() * 350;
-		this.randSize = 1 + Math.random() * 20;
-		this.randSpeed = 250 + Math.random() * 1300;
-		this.chue = Math.abs(this.n);
 
-		
+		this.randRot = 1 + Math.abs(this.n)  ;
+		this.randSize = 1 + Math.random() * 3;
+		this.randSpeed = 5 + Math.random() * 15;
+
+		this.vector = {
+			angle: Math.random()*360,
+			length: Math.abs(this.n) * this.randSize
+		};
 
 
 
-		this.fillColor = {
-			hue: color + this.chue * 150,
-			saturation: Math.random(),
-			brightness: 1
-		}
+		this.color = tinycolor(color).tetrad()[Math.floor(Math.random() * 4)];
+		this.chue = 0.5;
+		this.color = tinycolor(this.color).toHsl();
+		//console.log(this.color);//this fixes the color?
+		this.color = tinycolor({
+			h: this.color.h,
+			s: this.color.s,
+			l: Math.abs(this.n)
+		});
 
-			//this.fillColor = 'green';
+		this.graphics = new PIXI.Graphics();
+		stage.addChild(this.graphics);
 
-		this.path = new paper.Path();
-		this.path.strokeWidth = this.randSize;
-		this.path.strokeColor = this.fillColor;
-		//this.path.fillColor = this.fillColor;
-		this.path.strokeCap = 'round';
-		
 
+		var count = 1;
 			
-			
 
-		this.draw = function(dt, t) {
+		this.draw = function() {
 			if (this.remove) {
-				//this.path.remove();
+
 				return;
 			}
 
 			this.n = this.noise.perlin2(this.pos.x,this.pos.y);
-			this.vector.angle += this.n * this.randRot;
+			this.vector.angle += this.n ;
 			
-			this.vector.length = this.randSpeed;
+			//this.vector.length = this.randSpeed;
 
+			//this.fill = this.color.spin(this.chue).toHex();
 
-			this.pos.x += this.vector.x;
-			this.pos.y += this.vector.y;
+			this.color = tinycolor({
+				h: this.color._originalInput.h += this.chue,
+				s: this.color._originalInput.s,
+				l: 0.5 + this.n/2
+			});
+			//console.log(this.color);
 
-			this.paperRender();
+			// this.color.rgb = Color.hslToRgb(this.color.hue, this.s, 100);
+			//this.vector.length = Math.abs(this.n)*this.randSize;
 
-			if (this.path.segments.length > this.maxLength) {
+			this.pos.x += this.vector.length/4 * Math.cos(this.vector.angle);
+			this.pos.y += this.vector.length/4 * Math.sin(this.vector.angle)
+
+			this.pixiRender();
+
+			if (this.currentLength > this.maxLength) {
 
 				this.remove = true;
 			}
+			this.currentLength += 1;
 			
 
 		}
 
 
-		// this.paperRender = function() {
-		// 	var absn = Math.abs(this.n);
-		// 	this.path.add(new paper.Point(this.pos.x, this.pos.y));
-		// 	this.path.smooth();
-	
-			
-		// }
-
-
-		//smooth line path 
-		this.paperRender = function() {
-			var absn = Math.abs(this.n);
-			this.path.add(new paper.Point(this.pos.x, this.pos.y));
-
-			//this.path.fillColor = this.fillColor;
-			//this.path.strokeColor.hue += this.chue;
-			//this.path.fillColor.hue += this.chue;
-			// this.path.fillColor.saturation =1;
-			// this.path.fillColor.brightness =1;
-			this.fillColor = this.path.strokeColor;
-			this.path.smooth();
-
-
-			
-			
-		}
-
-		// this.paperRender = function() {
-		// 	var pos = new paper.Point(this.pos.x, this.pos.y);
-		// 	var size = new paper.Size(this.vector.x * this.randSize, this.vector.y * this.randSize);
-		// 	var rectangle = new paper.Rectangle(pos, size);
-		// 	var path = new paper.Path.Ellipse(rectangle);
-		// 	path.rotate(Math.abs(this.n) * this.randRot);
-
-		// 		path.fillColor = this.fillColor;
-		// 		path.fillColor.hue += this.chue;
-		// 		path.fillColor.saturation =1;
-		// 		path.fillColor.brightness =1;
-		// 		this.fillColor = path.fillColor;
+		this.pixiRender = function() {
 		
-		// }
+			//this.graphics.lineStyle(10, 0xffd900, 1);
+			this.vector.length += 0.5;
+			var size = this.vector.length/4;
+			this.graphics.beginFill("0x"+this.color.toHex());
+
+
+			//this.graphics.drawShape(new PIXI.Ellipse(this.pos.x, this.pos.y, sizex, sizey));
+			this.graphics.drawCircle(this.pos.x, this.pos.y, size);
+			this.graphics.endFill();
+			// this.graphics.rotation = count * 0.1;
+			// count += 1;
+		
+		
+		}
 
 
 	}

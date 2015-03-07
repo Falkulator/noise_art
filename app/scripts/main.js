@@ -23,19 +23,23 @@ window.onload = function() {
 	var rendererOptions = {
 	    antialiasing:true,
 	    transparent:false,
-	    resolution:1
+	    resolution:2
 	}
-	var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, rendererOptions);
+	var renderer = PIXI.autoDetectRenderer(window.innerWidth/2, window.innerHeight/2, rendererOptions);
 
 	// add the renderer view element to the DOM
 	document.body.appendChild(renderer.view);
 
-	var color = Math.random() * 360;
+	var color = tinycolor({ 
+			h: Math.random() * 360, 
+			s: 1, 
+			v: 1
+		});
 
-	for (var i=0;i<2;i++) {
+	for (var i=0;i<12;i++) {
 		var point = {
-			x: Math.random()*window.innerWidth*2,
-			y: Math.random()*window.innerHeight*2
+			x: Math.random()*window.innerWidth,
+			y: Math.random()*window.innerHeight
 		}
 		var chooser = Chooser(container, point, color);
 		choosers.push(chooser);
@@ -59,10 +63,10 @@ window.onload = function() {
 				choosers.splice(i,1);
 			}
 		}
-		if (dt > 1000) {
+		if (dt > 4000 && choosers.length < 3) {
 			var point = {
-				x: Math.random()*window.innerWidth*2,
-				y: Math.random()*window.innerHeight*2
+				x: Math.random()*window.innerWidth,
+				y: Math.random()*window.innerHeight
 			}
 
 
@@ -71,7 +75,7 @@ window.onload = function() {
 			choosers.push(chooser);
 			dt = 0;
 		}
-			
+	
 
 		requestAnimFrame( animate );
 

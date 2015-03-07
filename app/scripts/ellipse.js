@@ -1,5 +1,4 @@
-	var noise = require('./vendor/noise.js'),
-		Color = require('./color.js');
+	var noise = require('./vendor/noise.js');
 
 	var Ellipse = function(stage, point, color) {
 
@@ -12,12 +11,9 @@
 
 		this.n = this.noise.perlin2(this.pos.x, this.pos.y);
 
-		this.vector = {
-			angle: Math.random()*360,
-			length: 1 + Math.random() * 6
-		};
 
-		this.maxLength = Math.random() * 1020;
+
+		this.maxLength = Math.random() * 2020;
 		this.currentLength = 0;
 		
 
@@ -25,25 +21,25 @@
 		this.remove = false;
 
 		this.randRot = 1 + Math.abs(this.n)  ;
-		this.randSize = 80 + Math.random() * 300;
+		this.randSize = Math.random() * 4;
+		this.randSpeed = 5 + Math.random() * 15;
 
-		this.randSpeed = 1 + Math.random() * 5;
+		this.vector = {
+			angle: Math.random()*360,
+			length: Math.abs(this.n) * this.randSize
+		};
 
 
-		this.color = tinycolor({ 
-			h: color, 
-			s: Math.random(), 
-			v: Math.random()
+
+		this.color = tinycolor(color).tetrad()[Math.floor(Math.random() * 4)];
+		this.chue = 0.5;
+		this.color = tinycolor(this.color).toHsl();
+		//console.log(this.color);//this fixes the color?
+		this.color = tinycolor({
+			h: this.color.h,
+			s: this.color.s,
+			l: Math.abs(this.n)
 		});
-
-		this.color = tinycolor(this.color).tetrad()[Math.floor(Math.random() * 4)];
-		//this.color.brighten(Math.random()*100);
-//console.log(this.color);
-		this.chue = Math.abs(this.n) ;
-
-
-
-
 
 		this.graphics = new PIXI.Graphics();
 		stage.addChild(this.graphics);
@@ -59,23 +55,24 @@
 			}
 
 			this.n = this.noise.perlin2(this.pos.x,this.pos.y);
-			this.vector.angle += this.n * this.randRot;
+			this.vector.angle += this.n ;
 			
-			this.vector.length = this.randSpeed;
+			//this.vector.length = this.randSpeed;
 
 			//this.fill = this.color.spin(this.chue).toHex();
+
 			this.color = tinycolor({
 				h: this.color._originalInput.h += this.chue,
-				s: this.color._originalInput.s ,
-				v: this.color._originalInput.v
+				s: this.color._originalInput.s,
+				l: 0.3 + this.n
 			});
-
+			//console.log(this.color);
 
 			// this.color.rgb = Color.hslToRgb(this.color.hue, this.s, 100);
+			//this.vector.length = Math.abs(this.n)*this.randSize;
 
-
-			this.pos.x += this.vector.length * Math.cos(this.vector.angle);
-			this.pos.y += this.vector.length * Math.sin(this.vector.angle)
+			this.pos.x += this.vector.length/4 * Math.cos(this.vector.angle);
+			this.pos.y += this.vector.length/4 * Math.sin(this.vector.angle)
 
 			this.pixiRender();
 
@@ -92,12 +89,13 @@
 		this.pixiRender = function() {
 		
 			//this.graphics.lineStyle(10, 0xffd900, 1);
-			var sizex = this.vector.length * Math.cos(this.vector.angle);
-			var sizey = this.vector.length * Math.sin(this.vector.angle);
+			this.vector.length += this.n;
+			var size = this.vector.length/4;
 			this.graphics.beginFill("0x"+this.color.toHex());
 
+
 			//this.graphics.drawShape(new PIXI.Ellipse(this.pos.x, this.pos.y, sizex, sizey));
-			this.graphics.drawEllipse(this.pos.x, this.pos.y, sizex, sizey);
+			this.graphics.drawCircle(this.pos.x, this.pos.y, size);
 			// this.graphics.rotation = count * 0.1;
 			// count += 1;
 		
