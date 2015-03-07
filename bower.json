@@ -5,6 +5,7 @@
     "bootstrap-sass-official": "~3.3.1",
     "modernizr": "~2.8.1",
     "requirejs": "~2.1.16",
-    "pixi": "~2.2.7"
+    "pixi": "~2.2.7",
+    "tinycolor": "~1.1.2"
   }
 }

@@ -17,24 +17,30 @@
 			length: 1 + Math.random() * 6
 		};
 
-		this.maxLength = Math.random() *1020;
+		this.maxLength = Math.random() * 1020;
 		this.currentLength = 0;
 		
 
 
 		this.remove = false;
 
-		this.randRot = 1 + Math.abs(this.n) * Math.random() * 10;
-		this.randSize = 20 + Math.random() * 50;
+		this.randRot = 1 + Math.abs(this.n)  ;
+		this.randSize = 80 + Math.random() * 300;
 
-		this.randSpeed = 2 + Math.random() * 30;
+		this.randSpeed = 1 + Math.random() * 5;
 
-		this.s = Math.random() * 100;
-		this.color = {
-			hue: Math.abs(this.n) * 25 + color,
-			chue: 50,
-			rgb: Color.hslToRgb(Math.abs(this.hue), this.s, 100)
-		}
+
+		this.color = tinycolor({ 
+			h: color, 
+			s: Math.random(), 
+			v: Math.random()
+		});
+
+		this.color = tinycolor(this.color).tetrad()[Math.floor(Math.random() * 4)];
+		//this.color.brighten(Math.random()*100);
+//console.log(this.color);
+		this.chue = Math.abs(this.n) ;
+
 
 
 
@@ -48,7 +54,7 @@
 
 		this.draw = function() {
 			if (this.remove) {
-				//this.path.remove();
+
 				return;
 			}
 
@@ -57,8 +63,15 @@
 			
 			this.vector.length = this.randSpeed;
 
-			this.color.hue += this.color.chue;
-			this.color.rgb = Color.hslToRgb(this.color.hue, this.s, 100);
+			//this.fill = this.color.spin(this.chue).toHex();
+			this.color = tinycolor({
+				h: this.color._originalInput.h += this.chue,
+				s: this.color._originalInput.s ,
+				v: this.color._originalInput.v
+			});
+
+
+			// this.color.rgb = Color.hslToRgb(this.color.hue, this.s, 100);
 
 
 			this.pos.x += this.vector.length * Math.cos(this.vector.angle);
@@ -81,7 +94,7 @@
 			//this.graphics.lineStyle(10, 0xffd900, 1);
 			var sizex = this.vector.length * Math.cos(this.vector.angle);
 			var sizey = this.vector.length * Math.sin(this.vector.angle);
-			this.graphics.beginFill(Color.randomHex());
+			this.graphics.beginFill("0x"+this.color.toHex());
 
 			//this.graphics.drawShape(new PIXI.Ellipse(this.pos.x, this.pos.y, sizex, sizey));
 			this.graphics.drawEllipse(this.pos.x, this.pos.y, sizex, sizey);

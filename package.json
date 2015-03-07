@@ -3,6 +3,9 @@
   "engines": {
     "node": ">=0.10.0"
   },
+  "browser": {
+    "tinycolor": "./bower_components/tinycolor/tinycolor.js"
+  },
   "devDependencies": {
     "autoprefixer-core": "^4.0.2",
     "browser-sync": "^1.8.2",

@@ -139,5 +139,5 @@ gulp.task('build', ['jshint', 'html', 'images', 'fonts', 'extras'], function () 
 gulp.task('default', ['clean'], function () {
   gulp.start('build');
   gulp.start('scripts');
-  gulp.start('wiredep');
+
 });

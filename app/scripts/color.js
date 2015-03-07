@@ -52,8 +52,8 @@
 
 		function randomHex() {
 			var r = Math.floor(Math.random()*256);
-var g = Math.floor(Math.random()*256);
-var b = Math.floor(Math.random()*256);
+		var g = Math.floor(Math.random()*256);
+		var b = Math.floor(Math.random()*256);
 		// going from decimal to hex
 		var hexR = r.toString(16);
 		var hexG = g.toString(16);
@@ -73,7 +73,7 @@ var b = Math.floor(Math.random()*256);
 		}
 		 
 		// creating the hex value by concatenatening the string values
-		var hexColor = "0x" + hexR + hexG + hexB;
+		var hexColor = "#" + hexR + hexG + hexB;
 		return hexColor.toUpperCase();
 	}
 
