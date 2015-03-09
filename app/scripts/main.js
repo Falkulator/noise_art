@@ -1,7 +1,8 @@
 
 var Chooser = require('./chooser.js');
 
-var choosers;
+var choosers,
+		color;
 
 window.onload = function() {
 	
@@ -9,10 +10,10 @@ window.onload = function() {
 	canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 	paper.setup(canvas);
-	paper.view.zoom = 0.3;
+	paper.view.zoom = 0.5;
 	var path = new paper.Path.Rectangle(paper.view.bounds);
 	path.fillColor = 'black';
-
+	color = Math.random() * 360;
 	
 	resizeCanvas();
 
@@ -23,16 +24,19 @@ window.onload = function() {
 function start() {
 
 	choosers = [];
-	for (var i=0;i<1;i++) {
-		var p ={
+
+
+	for (var i=0;i<3;i++) {
+		var point = {
 			x: Math.random() * paper.view.bounds.width,
 			y: Math.random() * paper.view.bounds.height
 		};
 
-		var chooser = new Chooser(p);
+		var chooser = new Chooser(point, color);
 		choosers.push(chooser);
 	}
-	
+
+	paper.view.zoom = 0.01;
 	paper.view.onFrame = draw;
 
 	
@@ -57,29 +61,54 @@ function resizeCanvas() {
 
 
 var elapsedTime = 0;
+var zoomBool = false;
              
 function draw(event) {
-	var clen = choosers.length;
-	if (elapsedTime > 1) {
-		console.log(paper.view.zoom);
-		var p ={
-			x: Math.random() * paper.view.bounds.width,
-			y: Math.random() * paper.view.bounds.height
-		};
-
-		var chooser = new Chooser(p);
-		choosers.push(chooser);
-		
-		elapsedTime = 0;
+	if (elapsedTime > 1 && choosers.length < 15) {
+		everySec();
 	}
-	
-	paper.view.zoom -= 0.00015;
-	for (var i=0;i<clen;i++) {
+
+	//zoom(event.delta);
+
+	for (var i=0;i<choosers.length;i++) {
 		var chooser = choosers[i];
 		chooser.draw(event.delta, event.time);
+		if (chooser.remove) {
+			choosers.splice(i,1);
+		}
+		
 
 	}
 
 	elapsedTime += event.delta;
 
+}
+
+function everySec() {
+
+	var point ={
+		x: Math.random() * paper.view.bounds.width,
+		y: Math.random() * paper.view.bounds.height
+	};
+
+	var chooser = new Chooser(point, color);
+	choosers.push(chooser);
+	
+	elapsedTime = 0;
+}
+
+function zoom(dt) {
+	if (zoomBool === false) {
+		paper.view.zoom -= 0.0026*dt;
+		if (paper.view.zoom < 0.004 && zoomBool === false) {
+			zoomBool = true;
+		}
+		
+	} 
+	if (zoomBool === true) {
+		paper.view.zoom += 0.0003*dt;
+		if (paper.view.zoom > 0.02) {
+			zoomBool = false;
+		}
+	}
 }

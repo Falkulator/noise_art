@@ -1,43 +1,40 @@
 	var noise = require('./vendor/noise.js');
 
-	var Chooser = function(point) {
+	var Chooser = function(point, color) {
 
 		this.noise = new noise();
 		this.noise.seed(Math.random());
 		this.pos = {
 			x:point.x,
 			y:point.y
-		}
+		};
 		this.n = this.noise.perlin2(this.pos.x, this.pos.y);
 
-		this.vector = new paper.Point({
-			angle: Math.random()*360,
-			length: 1 + Math.random() * 6
-		});
-
-		this.maxLength = 200;
+		this.maxLength = 2000;
 		var stepSize = 0.3;
-		// this.preNoise = [];
-		// for (var i=0;i<this.maxLength;i++) {
-		// 	var x=y=0;
-		// 	this.preNoise.push(this.noise.perlin2(x,y));
-		// 	x+=stepSize;
-		// 	y+=stepSize;
-		// }
 
 		this.lastPoint = new paper.Point(this.pos.x, this.pos.y);
 		this.randRot = 10 + Math.abs(this.n) * Math.random() * 500;
-		this.randSize = 1 + Math.random() * 53;
-		this.randSpeed = 300 + Math.random() * 1000;
+		this.randSize = 1 + Math.random() * 80;
+		this.randSpeed = 1100 + Math.random() *10000;
 		this.chue = Math.random();
 
-		
+
+		this.vector = new paper.Point({
+			angle: Math.random()*360,
+			length: 1
+		});
+
+		this.chue = 2 * Math.abs(this.n);
 
 
-		var c = Math.abs(this.n);
-		this.fillColor = new paper.Color(c,c,1-c);
 
-			//this.fillColor = 'green';
+		this.fillColor = {
+			hue: color + this.chue * 150,
+			saturation: Math.random(),
+			brightness: 1
+		}
+
 
 		this.path = new paper.Path();
 		this.path.strokeWidth = this.randSize;
@@ -45,22 +42,17 @@
 		this.path.strokeCap = 'round';
 		this.remove = false;
 
-			
-			
-
 		this.draw = function(dt, t) {
 			if (this.remove)
 				return;
 			this.n = this.noise.perlin2(this.pos.x,this.pos.y);
 			this.vector.angle += this.n * this.randRot;
-			
-			this.vector.length = this.randSpeed;
 
-
-			this.pos.x += this.vector.x;
-			this.pos.y += this.vector.y;
+			this.pos.x += this.vector.x * this.randSpeed;
+			this.pos.y += this.vector.y * this.randSpeed;
 
 			this.paperRender();
+			this.path.closed = true;
 
 			if (this.path.segments.length > this.maxLength) {
 
@@ -85,6 +77,11 @@
 			var absn = Math.abs(this.n);
 			this.path.add(new paper.Point(this.pos.x, this.pos.y));
 			this.path.smooth();
+
+			this.path.fillColor = this.fillColor;
+			this.path.fillColor.hue += this.chue;
+
+			this.fillColor = this.path.fillColor;
 			
 			
 		}
