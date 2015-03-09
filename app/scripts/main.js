@@ -32,7 +32,7 @@ function start() {
 		choosers.push(chooser);
 	}
 
-	paper.view.zoom = 0.001;
+	paper.view.zoom = 0.006;
 	paper.view.onFrame = draw;
 
 	

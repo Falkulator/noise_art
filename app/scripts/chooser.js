@@ -12,17 +12,17 @@
 		this.ny = 0;
 		this.n = this.noise.perlin2(this.pos.x, this.pos.y);
 
-		this.maxLength = Math.random() * 200;
+		this.maxLength = 1 + Math.random() * 20;
 		var stepSize = 0.001 + Math.random() * 0.01;
 
 		this.lastPoint = new paper.Point(this.pos.x, this.pos.y);
 		this.randRot = 10 + Math.random() * 500;
 		this.randSize = 20 + Math.random() * 240;
 		this.randSpeed = this.randRot + Math.random() *100;
-		this.strokeWidth = 150 + Math.random() * 400;
+		this.strokeWidth = 15 + Math.random() * 400;
 		this.chue = this.n * 30;
 
-		var l = 90 + Math.random() * 20;
+		var l = 20 + Math.random() * 80;//zoom scaling
 		this.vector = new paper.Point({
 			angle: Math.random() * 360,
 			length: l * this.randSize
@@ -57,7 +57,7 @@
 			this.paperRender();
 
 			if (this.path.segments.length > this.maxLength) {
-				this.path.removeSegment(0);
+				//this.path.removeSegment(0);
 				//this.remove = true;
 			}
 			
