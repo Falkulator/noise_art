@@ -8,21 +8,23 @@
 			x:point.x,
 			y:point.y
 		};
-		this.n = this.noise.perlin2(this.pos.x, this.pos.y);
+		this.nx = 0;
+		this.ny = 0;
+		this.n = this.noise.perlin2(this.nx, this.ny);
 
-		this.maxLength = 2000;
-		var stepSize = 0.3;
+		this.maxLength = Math.random() * 2000;
+		var stepSize = 0.01;
 
 		this.lastPoint = new paper.Point(this.pos.x, this.pos.y);
-		this.randRot = 10 + Math.abs(this.n) * Math.random() * 500;
-		this.randSize = 1 + Math.random() * 80;
-		this.randSpeed = 1100 + Math.random() *10000;
+		this.randRot = 10 + Math.random() * 500;
+		this.randSize = 20 + Math.random() * 140;
+		this.randSpeed = this.randRot + Math.random() *100;
 		this.chue = Math.random();
 
 
 		this.vector = new paper.Point({
 			angle: Math.random()*360,
-			length: 1
+			length: 100 * this.randSize
 		});
 
 		this.chue = 2 * Math.abs(this.n);
@@ -45,14 +47,15 @@
 		this.draw = function(dt, t) {
 			if (this.remove)
 				return;
-			this.n = this.noise.perlin2(this.pos.x,this.pos.y);
+			this.nx += stepSize;
+			this.ny += stepSize;
+			this.n = this.noise.perlin2(this.nx,this.ny);
 			this.vector.angle += this.n * this.randRot;
 
-			this.pos.x += this.vector.x * this.randSpeed;
-			this.pos.y += this.vector.y * this.randSpeed;
+			this.pos.x += this.vector.x;
+			this.pos.y += this.vector.y;
 
 			this.paperRender();
-			this.path.closed = true;
 
 			if (this.path.segments.length > this.maxLength) {
 
@@ -78,8 +81,8 @@
 			this.path.add(new paper.Point(this.pos.x, this.pos.y));
 			this.path.smooth();
 
-			this.path.fillColor = this.fillColor;
-			this.path.fillColor.hue += this.chue;
+	//		this.path.fillColor = this.fillColor;
+	//		this.path.fillColor.hue += this.chue;
 
 			this.fillColor = this.path.fillColor;
 			

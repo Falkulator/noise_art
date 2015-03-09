@@ -17,8 +17,6 @@ window.onload = function() {
 	
 	resizeCanvas();
 
-	
-
 }
 
 function start() {
@@ -36,7 +34,7 @@ function start() {
 		choosers.push(chooser);
 	}
 
-	paper.view.zoom = 0.01;
+	paper.view.zoom = 0.001;
 	paper.view.onFrame = draw;
 
 	
@@ -70,6 +68,7 @@ function draw(event) {
 
 	//zoom(event.delta);
 
+
 	for (var i=0;i<choosers.length;i++) {
 		var chooser = choosers[i];
 		chooser.draw(event.delta, event.time);
@@ -87,9 +86,10 @@ function draw(event) {
 function everySec() {
 
 	var point ={
-		x: Math.random() * paper.view.bounds.width,
-		y: Math.random() * paper.view.bounds.height
+		x: Math.random() * paper.view.bounds.width/2,
+		y: Math.random() * paper.view.bounds.height/2
 	};
+	console.log(point)
 
 	var chooser = new Chooser(point, color);
 	choosers.push(chooser);
@@ -99,7 +99,7 @@ function everySec() {
 
 function zoom(dt) {
 	if (zoomBool === false) {
-		paper.view.zoom -= 0.0026*dt;
+		paper.view.zoom -= 0.0046*dt;
 		if (paper.view.zoom < 0.004 && zoomBool === false) {
 			zoomBool = true;
 		}
