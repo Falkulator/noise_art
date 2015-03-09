@@ -5,12 +5,11 @@ var choosers,
 		color;
 
 window.onload = function() {
-	
+
 	var canvas = document.getElementById('canvas');
 	canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 	paper.setup(canvas);
-	paper.view.zoom = 0.5;
 	var path = new paper.Path.Rectangle(paper.view.bounds);
 	path.fillColor = 'black';
 	color = Math.random() * 360;
@@ -23,8 +22,7 @@ function start() {
 
 	choosers = [];
 
-
-	for (var i=0;i<3;i++) {
+	for (var i=0;i<10;i++) {
 		var point = {
 			x: Math.random() * paper.view.bounds.width,
 			y: Math.random() * paper.view.bounds.height
@@ -62,9 +60,9 @@ var elapsedTime = 0;
 var zoomBool = false;
              
 function draw(event) {
-	if (elapsedTime > 1 && choosers.length < 15) {
-		everySec();
-	}
+	// if (elapsedTime > 1 && choosers.length < 15) {
+	// 	everySec();
+	// }
 
 	//zoom(event.delta);
 
@@ -86,10 +84,10 @@ function draw(event) {
 function everySec() {
 
 	var point ={
-		x: Math.random() * paper.view.bounds.width/2,
-		y: Math.random() * paper.view.bounds.height/2
+		x: Math.random() * paper.view.bounds.width,
+		y: Math.random() * paper.view.bounds.height
 	};
-	console.log(point)
+
 
 	var chooser = new Chooser(point, color);
 	choosers.push(chooser);
@@ -99,7 +97,8 @@ function everySec() {
 
 function zoom(dt) {
 	if (zoomBool === false) {
-		paper.view.zoom -= 0.0046*dt;
+		//paper.view.zoom -= 0.0046*dt;
+		paper.view.zoom -= 0.026*dt;
 		if (paper.view.zoom < 0.004 && zoomBool === false) {
 			zoomBool = true;
 		}
@@ -111,4 +110,17 @@ function zoom(dt) {
 			zoomBool = false;
 		}
 	}
+}
+var tool = new paper.Tool();
+tool.onMouseUp = function(event) {
+	var point ={
+		x: event.point.x,
+		y: event.point.y
+	};
+
+
+	var chooser = new Chooser(point, color);
+	choosers.push(chooser);
+	
+	elapsedTime = 0;
 }
