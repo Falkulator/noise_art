@@ -12,6 +12,7 @@ window.onload = function() {
 	paper.setup(canvas);
 	var path = new paper.Path.Rectangle(paper.view.bounds);
 	path.fillColor = 'black';
+	paper.view.zoom = 0.006;
 	color = Math.random() * 360;
 	
 	resizeCanvas();
@@ -24,8 +25,8 @@ function start() {
 
 	for (var i=0;i<10;i++) {
 		var point = {
-			x: Math.random() * paper.view.bounds.width,
-			y: Math.random() * paper.view.bounds.height
+			x: Math.random() * paper.view.bounds.width /10 ,
+			y: Math.random() * paper.view.bounds.height /10
 		};
 
 		var chooser = new Chooser(point, color);
@@ -60,9 +61,9 @@ var elapsedTime = 0;
 var zoomBool = false;
              
 function draw(event) {
-	// if (elapsedTime > 1 && choosers.length < 15) {
-	// 	everySec();
-	// }
+	if (elapsedTime > 1) {
+		everySec();
+	}
 
 	//zoom(event.delta);
 
@@ -83,14 +84,17 @@ function draw(event) {
 
 function everySec() {
 
-	var point ={
-		x: Math.random() * paper.view.bounds.width,
-		y: Math.random() * paper.view.bounds.height
-	};
+	while (choosers.length < 17) {
 
+		var point ={
+			x: Math.random() * paper.view.bounds.width/10,
+			y: Math.random() * paper.view.bounds.height/10
+		};
 
 	var chooser = new Chooser(point, color);
 	choosers.push(chooser);
+
+	}
 	
 	elapsedTime = 0;
 }
@@ -111,16 +115,20 @@ function zoom(dt) {
 		}
 	}
 }
+
 var tool = new paper.Tool();
+var drawTrails = false; 
 tool.onMouseUp = function(event) {
-	var point ={
-		x: event.point.x,
-		y: event.point.y
-	};
+	// var point ={
+	// 	x: event.point.x,
+	// 	y: event.point.y
+	// };
 
 
-	var chooser = new Chooser(point, color);
-	choosers.push(chooser);
+	// var chooser = new Chooser(point, color);
+	// choosers.push(chooser);
 	
-	elapsedTime = 0;
+	// elapsedTime = 0;
+
+	choosers.map(function(c) {c.drawTrails();})
 }
