@@ -12,7 +12,7 @@
 		this.ny = 0;
 		this.n = this.noise.perlin2(this.pos.x, this.pos.y);
 
-		this.maxLength = 20 + Math.random() * 200;
+		this.maxLength = 20 + Math.random() * 600;
 		var stepSize = 0.001 + Math.random() * 0.01;
 
 		this.randRot = 10 + Math.random() * 400;
@@ -43,11 +43,11 @@
 		this.path.strokeColor = this.fillColor;
 		this.path.strokeCap = 'round';
 		this.remove = false;
-		this.trails = false;
+		this.dead = false;
 
 		var elapsedTime = 0;
 
-		this.draw = function(dt, t) {
+		this.draw = function(dt, trails) {
 			this.nx += stepSize;
 			this.ny += stepSize;
 			this.n = this.noise.perlin2(this.nx,this.ny);
@@ -58,43 +58,36 @@
 
 			var pWidth = paper.view.bounds.width * 5;
 			var pHeight = paper.view.bounds.height * 5;
-			//console.log(this.pos.x, pWidth)
-			if (pWidth < Math.abs(this.pos.x) ||
-					pHeight < Math.abs(this.pos.y)) {
-				this.path.remove();
-				this.remove = true;
 
-			}
 
 
 			if (this.path.segments.length > this.maxLength) {
-				// if (!this.trails) {
+				if (!trails) {
 					this.path.removeSegment(0);
-				//}
-						
+					this.maxLength -=1;
 					
-			}
-				elapsedTime += dt;
-				
-
+				}	
+				if (this.maxLength <= 0) {
+					this.remove = true;
+				}
+			} else {
 				this.paperRender();
-	
+			}
+
 
 			
+
+				
 
 		}
 
 		this.paperRender = function() {
-			var absn = Math.abs(this.n);
 			this.path.add(new paper.Point(this.pos.x, this.pos.y));
 			this.path.smooth();
 			
 			
 		}
 
-		this.drawTrails = function() {
-			this.trails = !this.trails;
-		}
  
 	}
 

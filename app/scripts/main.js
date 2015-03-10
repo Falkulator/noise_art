@@ -70,7 +70,7 @@ function draw(event) {
 
 	for (var i=0;i<choosers.length;i++) {
 		var chooser = choosers[i];
-		chooser.draw(event.delta, event.time);
+		chooser.draw(event.delta, drawTrails);
 		if (chooser.remove) {
 			choosers.splice(i,1);
 		}
@@ -84,13 +84,13 @@ function draw(event) {
 
 function everySec() {
 
-	while (choosers.length < 17) {
+	while (choosers.length < 10) {
 
 		var point ={
 			x: Math.random() * paper.view.bounds.width/10,
 			y: Math.random() * paper.view.bounds.height/10
 		};
-
+console.log(point)
 	var chooser = new Chooser(point, color);
 	choosers.push(chooser);
 
@@ -119,16 +119,6 @@ function zoom(dt) {
 var tool = new paper.Tool();
 var drawTrails = false; 
 tool.onMouseUp = function(event) {
-	// var point ={
-	// 	x: event.point.x,
-	// 	y: event.point.y
-	// };
-
-
-	// var chooser = new Chooser(point, color);
-	// choosers.push(chooser);
-	
-	// elapsedTime = 0;
-
-	choosers.map(function(c) {c.drawTrails();})
+console.log(drawTrails)
+	drawTrails = !drawTrails;
 }
