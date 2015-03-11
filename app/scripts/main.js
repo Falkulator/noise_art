@@ -1,7 +1,7 @@
 
 var Chooser = require('./chooser.js');
 
-var choosers,
+var choosers = [],
 		color;
 
 window.onload = function() {
@@ -10,8 +10,6 @@ window.onload = function() {
 	canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 	paper.setup(canvas);
-	var path = new paper.Path.Rectangle(paper.view.bounds);
-	path.fillColor = 'black';
 	paper.view.zoom = 0.006;
 	color = Math.random() * 360;
 	
@@ -20,18 +18,6 @@ window.onload = function() {
 }
 
 function start() {
-
-	choosers = [];
-
-	for (var i=0;i<10;i++) {
-		var point = {
-			x: Math.random() * paper.view.bounds.width /10 ,
-			y: Math.random() * paper.view.bounds.height /10
-		};
-
-		var chooser = new Chooser(point, color);
-		choosers.push(chooser);
-	}
 
 	paper.view.zoom = 0.006;
 	paper.view.onFrame = draw;
@@ -90,7 +76,7 @@ function everySec() {
 			x: Math.random() * paper.view.bounds.width/10,
 			y: Math.random() * paper.view.bounds.height/10
 		};
-console.log(point)
+
 	var chooser = new Chooser(point, color);
 	choosers.push(chooser);
 
@@ -119,6 +105,6 @@ function zoom(dt) {
 var tool = new paper.Tool();
 var drawTrails = false; 
 tool.onMouseUp = function(event) {
-console.log(drawTrails)
+
 	drawTrails = !drawTrails;
 }
