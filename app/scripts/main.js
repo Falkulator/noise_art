@@ -70,7 +70,7 @@ function draw(event) {
 
 function everySec() {
 
-	while (choosers.length < 10) {
+	while (choosers.length < 9) {
 
 		var point ={
 			x: Math.random() * paper.view.bounds.width/10,

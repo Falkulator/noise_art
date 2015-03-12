@@ -84,6 +84,14 @@ gulp.task('extras', function () {
   }).pipe(gulp.dest('dist'));
 });
 
+gulp.task('copy', function () {
+  return gulp.src([
+    'app/index.html'
+  ], {
+    dot: true
+  }).pipe(gulp.dest('./'));
+});
+
 gulp.task('clean', require('del').bind(null, ['.tmp', 'dist']));
 
 gulp.task('serve', ['styles', 'fonts'], function () {
@@ -140,4 +148,5 @@ gulp.task('default', ['clean'], function () {
   gulp.start('build');
   gulp.start('scripts');
   gulp.start('wiredep');
+  gulp.start('copy');
 });
