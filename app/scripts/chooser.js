@@ -1,7 +1,7 @@
 	var noise = require('./vendor/noise.js');
 
 	var Chooser = function(point, color) {
-
+		
 		this.noise = new noise();
 		this.noise.seed(Math.random());
 		this.pos = {
@@ -12,16 +12,16 @@
 		this.ny = 0;
 		this.n = this.noise.perlin2(this.pos.x, this.pos.y);
 
-		this.maxLength = 20 + Math.random() * 600;
-		var stepSize = 0.001 + Math.random() * 0.01;
+		this.maxLength = 20 + Math.random() * 800;
+		var stepSize = 0.015;
 
-		this.randRot = 10 + Math.random() * 400;
-		this.randSize = 20 + Math.random() * 240;
+		this.randRot = 300;
+		this.randSize = 5 + Math.random() * 15;
 		this.randSpeed = this.randRot + Math.random() *100;
-		this.strokeWidth = 15 + Math.random() * 400;
+		this.strokeWidth = 20 + Math.random() * 30;
 		this.chue = this.n * 30;
 
-		var l = 20 + Math.random() * 80;//zoom scaling
+		var l = 20 ;//zoom scaling
 		this.vector = new paper.Point({
 			angle: Math.random() * 360,
 			length: l * this.randSize
@@ -48,6 +48,7 @@
 		var elapsedTime = 0;
 
 		this.draw = function(dt, trails) {
+			//console.log(this);
 			this.nx += stepSize;
 			this.ny += stepSize;
 			this.n = this.noise.perlin2(this.nx,this.ny);

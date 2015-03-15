@@ -10,8 +10,9 @@ window.onload = function() {
 	canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 	paper.setup(canvas);
-	paper.view.zoom = 0.006;
-	color = Math.random() * 360;
+	paper.view.zoom = 0.039;
+	color = Math.random() * 360; 
+	setCss();
 	
 	resizeCanvas();
 
@@ -19,7 +20,7 @@ window.onload = function() {
 
 function start() {
 
-	paper.view.zoom = 0.006;
+
 	paper.view.onFrame = draw;
 
 	
@@ -73,8 +74,8 @@ function everySec() {
 	while (choosers.length < 9) {
 
 		var point ={
-			x: Math.random() * paper.view.bounds.width/10,
-			y: Math.random() * paper.view.bounds.height/10
+			x: Math.random() * paper.view.bounds.width/3,
+			y: Math.random() * paper.view.bounds.height/3
 		};
 
 	var chooser = new Chooser(point, color);
@@ -107,4 +108,19 @@ var drawTrails = false;
 tool.onMouseUp = function(event) {
 
 	drawTrails = !drawTrails;
+}
+
+
+setCss = function() {
+	var hex = new tinycolor({
+		h: color,
+		s: 100,
+		v: 100 
+
+	});
+	$('i').hover(function() {
+		$(this).css("color",hex.toRgbString());
+	}, function() {
+		$(this).css("color","white");
+	});
 }
