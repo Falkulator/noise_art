@@ -15,13 +15,13 @@
 		this.maxLength = 20 + Math.random() * 800;
 		var stepSize = 0.015;
 
-		this.randRot = 300;
+		this.randRot = 300 + Math.random() * 20;
 		this.randSize = 5 + Math.random() * 15;
 		this.randSpeed = this.randRot + Math.random() *100;
 		this.strokeWidth = 20 + Math.random() * 30;
 		this.chue = this.n * 30;
 
-		var l = 20 ;//zoom scaling
+		var l = 9 + Math.random() * 11;//zoom scaling
 		this.vector = new paper.Point({
 			angle: Math.random() * 360,
 			length: l * this.randSize
